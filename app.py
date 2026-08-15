@@ -974,7 +974,12 @@ def render_open_ended_comments_section(
         st.info("ไม่พบคำตอบ H1 หรือ H2 สำหรับมุมมองที่เลือก")
         return
 
-    meaningful = comments[~comments["is_placeholder"]].copy()
+    placeholder_mask = (
+    comments["is_placeholder"]
+    .fillna(False)
+    .astype("boolean")
+    )
+    meaningful = comments.loc[~placeholder_mask].copy()
     h1_count = int(
         meaningful["question_code"].eq("H1").sum()
     )
